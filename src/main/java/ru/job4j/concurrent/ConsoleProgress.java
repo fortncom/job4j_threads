@@ -7,13 +7,12 @@ public class ConsoleProgress implements Runnable {
         int count = 0;
         while (!Thread.currentThread().isInterrupted()) {
             count++;
-                String s = count % 3 == 0 ? "/" :  "\\";
+                String s = count % 2 == 0 ? "/" :  "\\";
                 System.out.print("\r load: " + "process[" + s + "]");
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
-                e.printStackTrace();
-                break;
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -21,7 +20,7 @@ public class ConsoleProgress implements Runnable {
     public static void main(String[] args) throws InterruptedException {
         Thread progress = new Thread(new ConsoleProgress());
         progress.start();
-        Thread.sleep(10000);
+        Thread.sleep(2000);
         progress.interrupt();
     }
 }
