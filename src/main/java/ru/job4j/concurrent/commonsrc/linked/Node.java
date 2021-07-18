@@ -1,4 +1,4 @@
-package ru.job4j.concurrent.linked;
+package ru.job4j.concurrent.commonsrc.linked;
 
 public class Node<T> {
     private final Node<T> next;
