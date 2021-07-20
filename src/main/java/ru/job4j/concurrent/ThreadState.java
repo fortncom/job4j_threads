@@ -10,7 +10,7 @@ public class ThreadState {
         System.out.println("Second state: ".concat(second.getState().toString()));
         second.start();
         while (first.getState() != Thread.State.TERMINATED
-                && second.getState() != Thread.State.TERMINATED) {
+                || second.getState() != Thread.State.TERMINATED) {
             System.out.println("First state: ".concat(first.getState().toString()));
             System.out.println("Second state: ".concat(second.getState().toString()));
         }
