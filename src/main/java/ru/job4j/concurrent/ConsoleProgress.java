@@ -5,10 +5,13 @@ public class ConsoleProgress implements Runnable {
     @Override
     public void run() {
         int count = 0;
+        char[] chars = {'-', '\\', '|', '/'};
         while (!Thread.currentThread().isInterrupted()) {
             count++;
-                String s = count % 2 == 0 ? "/" :  "\\";
-                System.out.print("\r load: " + "process[" + s + "]");
+            if (count == chars.length) {
+                count = 0;
+            }
+            System.out.print("\r load: " + "process[" + chars[count] + "]");
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -20,7 +23,7 @@ public class ConsoleProgress implements Runnable {
     public static void main(String[] args) throws InterruptedException {
         Thread progress = new Thread(new ConsoleProgress());
         progress.start();
-        Thread.sleep(2000);
+        Thread.sleep(10000);
         progress.interrupt();
     }
 }
