@@ -13,13 +13,13 @@ class Bank implements Transfer {
     @Override
     public boolean transfer(int from, int to, int amount) {
         boolean rsl = false;
-        Optional<User> user1 = storage.findById(from);
-        Optional<User> user2 = storage.findById(to);
-        if (user1.isPresent() && user2.isPresent()) {
-            User userFrom = user1.get();
+        Optional<User> userFromOpt = storage.findById(from);
+        Optional<User> userToOpt = storage.findById(to);
+        if (userFromOpt.isPresent() && userToOpt.isPresent()) {
+            User userFrom = userFromOpt.get();
             if (userFrom.getAmount() >= amount) {
                 userFrom.setAmount(userFrom.getAmount() - amount);
-                User userTo = user2.get();
+                User userTo = userToOpt.get();
                 userTo.setAmount(userTo.getAmount() + amount);
                 rsl = true;
             }

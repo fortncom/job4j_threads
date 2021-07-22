@@ -3,27 +3,29 @@ package ru.job4j.concurrent.synchsrc.bank;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @ThreadSafe
 class UserStorage implements Storage {
 
     @GuardedBy("this")
-    private final List<User> store = new ArrayList<>();
-
+    private final Map<Integer, User> store = new HashMap<>();
     @Override
     public synchronized boolean add(User user) {
-        return !store.contains(user) && store.add(user);
+        boolean rsl = false;
+        if (!store.containsKey(user.getId())) {
+            store.put(user.getId(), user);
+            rsl = true;
+        }
+        return rsl;
     }
 
     @Override
     public synchronized boolean update(User user) {
         boolean rsl = false;
-        if (store.contains(user)) {
-           store.set(store.indexOf(user), user);
-           rsl = true;
+        if (store.containsKey(user.getId())) {
+            store.put(user.getId(), user);
+            rsl = true;
         }
         return rsl;
     }
@@ -31,8 +33,8 @@ class UserStorage implements Storage {
     @Override
     public synchronized boolean delete(User user) {
         boolean rsl = false;
-        if (store.contains(user)) {
-            rsl = store.remove(user);
+        if (store.containsKey(user.getId())) {
+            rsl = store.remove(user.getId(), user);
         }
         return rsl;
     }
@@ -40,11 +42,8 @@ class UserStorage implements Storage {
     @Override
     public synchronized Optional<User> findById(int id) {
         Optional<User> rsl = Optional.empty();
-        for (User user : store) {
-            if (user.getId() == id) {
-                rsl = Optional.of(user);
-                break;
-            }
+        if (store.containsKey(id)) {
+            rsl = Optional.of(store.get(id));
         }
         return rsl;
     }
