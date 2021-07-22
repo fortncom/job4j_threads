@@ -12,31 +12,19 @@ class UserStorage implements Storage {
     private final Map<Integer, User> store = new HashMap<>();
     @Override
     public synchronized boolean add(User user) {
-        boolean rsl = false;
-        if (!store.containsKey(user.getId())) {
-            store.put(user.getId(), user);
-            rsl = true;
-        }
-        return rsl;
+        User rsl = store.putIfAbsent(user.getId(), user);
+        return rsl != null && rsl.equals(user);
     }
 
     @Override
     public synchronized boolean update(User user) {
-        boolean rsl = false;
-        if (store.containsKey(user.getId())) {
-            store.put(user.getId(), user);
-            rsl = true;
-        }
-        return rsl;
+        User rsl = store.replace(user.getId(), user);
+        return rsl != null && rsl.equals(user);
     }
 
     @Override
     public synchronized boolean delete(User user) {
-        boolean rsl = false;
-        if (store.containsKey(user.getId())) {
-            rsl = store.remove(user.getId(), user);
-        }
-        return rsl;
+        return store.remove(user.getId(), user);
     }
 
     @Override
