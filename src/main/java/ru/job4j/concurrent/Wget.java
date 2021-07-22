@@ -38,6 +38,7 @@ public class Wget implements Runnable {
                         if (speed > rslTime) {
                             Thread.sleep(speed - rslTime);
                         }
+                        startTime = System.currentTimeMillis();
                     }
                 System.out.print("\rLoading is complete.");
             } catch (IOException e) {
