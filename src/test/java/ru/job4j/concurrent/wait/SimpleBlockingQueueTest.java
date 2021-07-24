@@ -24,7 +24,11 @@ public class SimpleBlockingQueueTest {
         @Override
         public void run() {
             for (T t : list) {
-                queue.offer(t);
+                try {
+                    queue.offer(t);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }
@@ -41,7 +45,11 @@ public class SimpleBlockingQueueTest {
         @Override
         public void run() {
             for (int i = 0; i < 3; i++) {
-                rsl.add(queue.poll());
+                try {
+                    rsl.add(queue.poll());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }
