@@ -19,18 +19,18 @@ public class SimpleBlockingQueue<T> {
 
     public synchronized void offer(T value) throws InterruptedException {
         while (queue.size() == capacity) {
-            this.wait();
+            wait();
         }
         queue.offer(value);
-        this.notifyAll();
+        notifyAll();
     }
 
     public synchronized T poll() throws InterruptedException {
         while (queue.size() == 0) {
-            this.wait();
+            wait();
         }
         T t = queue.poll();
-        this.notifyAll();
+        notifyAll();
         return t;
     }
     public boolean isEmpty() {
