@@ -40,15 +40,6 @@ public class ThreadPool {
         @Override
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
-                if (tasks.isEmpty()) {
-                    try {
-                        synchronized (this) {
-                            this.wait();
-                        }
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
                 try {
                     Runnable job = tasks.poll();
                     job.run();
