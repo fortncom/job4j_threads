@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
-public class ParallelSearch<T> extends RecursiveTask<List<Integer>> {
+public class ParallelSearchIndicesToList<T> extends RecursiveTask<List<Integer>> {
 
     private static final int THRESHOLD = 10;
     private final T[] array;
@@ -13,7 +13,7 @@ public class ParallelSearch<T> extends RecursiveTask<List<Integer>> {
     private final int from;
     private final int to;
 
-    public ParallelSearch(T[] array, T item, int from, int to) {
+    public ParallelSearchIndicesToList(T[] array, T item, int from, int to) {
         this.array = array;
         this.item = item;
         this.from = from;
@@ -26,8 +26,8 @@ public class ParallelSearch<T> extends RecursiveTask<List<Integer>> {
            return processing();
         }
         int mid = (from + to) / 2;
-        ParallelSearch<T> leftSearch = new ParallelSearch<>(array, item,  from, mid);
-        ParallelSearch<T> rightSearch = new ParallelSearch<>(array, item,  mid + 1, to);
+        ParallelSearchIndicesToList<T> leftSearch = new ParallelSearchIndicesToList<>(array, item,  from, mid);
+        ParallelSearchIndicesToList<T> rightSearch = new ParallelSearchIndicesToList<>(array, item,  mid + 1, to);
         leftSearch.fork();
         rightSearch.fork();
         List<Integer> rslList = new ArrayList<>();
@@ -48,6 +48,6 @@ public class ParallelSearch<T> extends RecursiveTask<List<Integer>> {
 
     public static <T> List<Integer> searchIndex(T[] array, T item) {
         ForkJoinPool forkJoinPool = new ForkJoinPool(2);
-        return forkJoinPool.invoke(new ParallelSearch<>(array, item, 0, array.length - 1));
+        return forkJoinPool.invoke(new ParallelSearchIndicesToList<>(array, item, 0, array.length - 1));
     }
 }
