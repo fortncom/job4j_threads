@@ -53,8 +53,6 @@ public class RolColSum {
             rsl[i] = new Sums();
             for (int j = 0; j < matrix[i].length; j++) {
                 rsl[i].rowSum += matrix[i][j];
-            }
-            for (int j = 0; j < matrix.length; j++) {
                 rsl[i].colSum += matrix[j][i];
             }
         }
@@ -78,14 +76,10 @@ public class RolColSum {
         return CompletableFuture.supplyAsync(() -> {
             for (int j = 0; j < data[line].length; j++) {
                 sums.rowSum += data[line][j];
-            }
-            return sums;
-        }).thenCombine(CompletableFuture.supplyAsync(() -> {
-            for (int j = 0; j < data.length; j++) {
                 sums.colSum += data[j][line];
             }
             return sums;
-        }), (sums1, sums2) -> sums);
+        });
     }
 
 }
