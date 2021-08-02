@@ -6,7 +6,6 @@ import java.util.concurrent.RecursiveTask;
 public class ParallelSearchIndex<T> extends RecursiveTask<Integer> {
 
     private static final int THRESHOLD = 10;
-    private static volatile int result = -1;
     private final T[] array;
     private final T item;
     private final int from;
@@ -22,27 +21,25 @@ public class ParallelSearchIndex<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (to - from <= THRESHOLD) {
-            processing();
-        } else {
-            int mid = (from + to) / 2;
-            ParallelSearchIndex<T> leftSearch = new ParallelSearchIndex<>(array, item,  from, mid);
-            ParallelSearchIndex<T> rightSearch = new ParallelSearchIndex<>(array, item,  mid + 1, to);
-            leftSearch.fork();
-            rightSearch.fork();
-            leftSearch.join();
-            rightSearch.join();
+           return processing();
         }
-        return result;
+        int mid = (from + to) / 2;
+        ParallelSearchIndex<T> leftSearch = new ParallelSearchIndex<>(array, item,  from, mid);
+        ParallelSearchIndex<T> rightSearch = new ParallelSearchIndex<>(array, item,  mid + 1, to);
+        leftSearch.fork();
+        rightSearch.fork();
+        Integer left = leftSearch.join();
+        Integer right = rightSearch.join();
+        return left > right ? left : right;
     }
 
     private int processing() {
-        int count = from;
-        while (result == -1 && count != to) {
-            if (array[count].equals(item)) {
-               result = count;
-               break;
+        int result = -1;
+        for (int i = from; i < to; i++) {
+            if (array[i].equals(item)) {
+                result = i;
+                break;
             }
-            count++;
         }
         return result;
     }
